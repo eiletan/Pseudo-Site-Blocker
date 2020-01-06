@@ -82,13 +82,13 @@ chrome.runtime.onMessage.addListener(
     });
 
 
-// Fired when new tab is opened, setting tabid
-chrome.tabs.onCreated.addListener(function(tab){
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        var activeTab = tabs[0];
-        tabid = activeTab.id;
-    });
-});
+// // Fired when new tab is opened, setting tabid
+// chrome.tabs.onCreated.addListener(function(tab){
+//     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+//         var activeTab = tabs[0];
+//         tabid = activeTab.id;
+//     });
+// });
 
 //When tab url is changed, checks whether a blocked site is open in chrome, and spams popups if there is
 chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
@@ -133,11 +133,8 @@ function generateNum(){
 // Spams popup messages if blocked site exists in the window
 function verifyTab(tabId,changeInfo,tab){
     clearInterval(int);
-    if(tabId === tabid && tab.status === "complete"){
-        if(checkBlock(tab.url)) {
-            unleashTheRoomba(tab.url);
-        }
-        else{
+    if(tab.status === "complete"){
+        console.log("reached complete: updated code");
             chrome.tabs.query({currentWindow: true},function(tabs){
                 for(var a = 0; a < tabs.length; a++){
                     var utostr = String(tabs[a].url);
@@ -148,7 +145,6 @@ function verifyTab(tabId,changeInfo,tab){
                 }
             });
         }
-    }
 }
 
 
