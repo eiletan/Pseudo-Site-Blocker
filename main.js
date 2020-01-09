@@ -1,8 +1,12 @@
 var blocks = [];
 
+
 // Retrieve block list from memory
 chrome.storage.local.get(["sites"],function(result){
         blocks = result.sites;
+        if(!(Array.isArray(blocks))){
+            blocks = [];
+        }
         chrome.runtime.sendMessage({data:blocks});
 });
 

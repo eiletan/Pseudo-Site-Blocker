@@ -1,6 +1,6 @@
 {
   "name": "Pseudo Site blocker",
-  "version": "1.0",
+  "version": "2.0",
   "description": "Annoy yourself into being productive",
   "permissions": ["storage","tabs"],
   "background": {

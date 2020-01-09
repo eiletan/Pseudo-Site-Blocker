@@ -1,5 +1,9 @@
 var gold = [];
 
+// TODO: Fix the issue where when the background script is activated, there is no locallist data available. Maybe fix by sending messages every time a new tab is fired
+// TODO: confirmed that it is the case that the background script is running properly; script doesn't have block list thought so to fix, request data everytime a new tab is created
+
+
 // Messages to popup when user visits a blocked website
 var str1 = "Blocked website detected!";
 var str2 = "Ding dong website still blocked";
@@ -68,6 +72,15 @@ var tabid;
 // List of blocked sites, received from the user interface/main.js
 var locallist = [];
 
+// chrome.storage.local.get(["sites"],function(result){
+//     locallist = result.sites;
+//     if(!(Array.isArray(locallist))){
+//         locallist = [];
+//     }
+// });
+
+
+
 var btab;
 
 // Interval for spamming popup messages
@@ -82,16 +95,14 @@ chrome.runtime.onMessage.addListener(
     });
 
 
-// // Fired when new tab is opened, setting tabid
-// chrome.tabs.onCreated.addListener(function(tab){
-//     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//         var activeTab = tabs[0];
-//         tabid = activeTab.id;
-//     });
-// });
+// Fired when new tab is opened, setting tabid
+chrome.tabs.onCreated.addListener(function(tab){
+    console.log("background script awake");
+});
 
 //When tab url is changed, checks whether a blocked site is open in chrome, and spams popups if there is
 chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
+    clearInterval(int);
     verifyTab(tabId,changeInfo,tab);
 });
 
@@ -135,6 +146,7 @@ function verifyTab(tabId,changeInfo,tab){
     clearInterval(int);
     if(tab.status === "complete"){
         console.log("reached complete: updated code");
+        console.log("length of local after activation: " +locallist.length);
             chrome.tabs.query({currentWindow: true},function(tabs){
                 for(var a = 0; a < tabs.length; a++){
                     var utostr = String(tabs[a].url);
@@ -149,6 +161,7 @@ function verifyTab(tabId,changeInfo,tab){
 
 
 function unleashTheRoomba(url){
+    clearInterval(int);
     if(checkBlock(url)){
         alert("BEEP");
         var interval = generateNum();
