@@ -72,12 +72,6 @@ var tabid;
 // List of blocked sites, received from the user interface/main.js
 var locallist = [];
 
-// chrome.storage.local.get(["sites"],function(result){
-//     locallist = result.sites;
-//     if(!(Array.isArray(locallist))){
-//         locallist = [];
-//     }
-// });
 
 
 
@@ -95,14 +89,27 @@ chrome.runtime.onMessage.addListener(
     });
 
 
-// Fired when new tab is opened, setting tabid
+// Fired when new tab is opened, getting the block list each time
 chrome.tabs.onCreated.addListener(function(tab){
     console.log("background script awake");
+    chrome.storage.local.get(["sites"],function(result){
+        locallist = result.sites;
+        if(!(Array.isArray(locallist))){
+            locallist = [];
+        }
+    });
+
 });
 
 //When tab url is changed, checks whether a blocked site is open in chrome, and spams popups if there is
 chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
     clearInterval(int);
+    chrome.storage.local.get(["sites"],function(result){
+        locallist = result.sites;
+        if(!(Array.isArray(locallist))){
+            locallist = [];
+        }
+    });
     verifyTab(tabId,changeInfo,tab);
 });
 
