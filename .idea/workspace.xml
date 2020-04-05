@@ -4,6 +4,7 @@
     <list default="true" id="725b4b3a-1a3f-4bfc-bcb5-c228e9a6e07e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/background.js" beforeDir="false" afterPath="$PROJECT_DIR$/background.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,12 +22,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="15" />
-    <option name="y" value="30" />
-    <option name="width" value="1890" />
-    <option name="height" value="960" />
-  </component>
   <component name="ProjectId" id="1VUoOFt840mKrjvYC3gVbAn5fBA" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -37,6 +32,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -82,7 +78,10 @@
       <workItem from="1578513243607" duration="919000" />
       <workItem from="1578514381906" duration="32000" />
       <workItem from="1578514826735" duration="55000" />
-      <workItem from="1578597581540" duration="797000" />
+      <workItem from="1578597581540" duration="798000" />
+      <workItem from="1578603916406" duration="51000" />
+      <workItem from="1585772615665" duration="60000" />
+      <workItem from="1585772676837" duration="8573000" />
     </task>
     <servers />
   </component>
@@ -90,9 +89,17 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="656" y="125" width="607" height="789" key="find.popup" timestamp="1577839075922">
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1585792415728">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="656" y="125" width="607" height="789" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1577839075922" />
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1585792415728" />
+    <state x="461" y="162" key="SettingsEditor" timestamp="1585773553760">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1585773553760" />
+    <state x="656" y="125" width="607" height="789" key="find.popup" timestamp="1585791608269">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="656" y="125" width="607" height="789" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1585791608269" />
   </component>
 </project>
