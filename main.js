@@ -70,4 +70,5 @@ function clearList(){
     chrome.storage.local.set({"sites":blocks},function(){
         alert("cleared");
     });
+    chrome.runtime.sendMessage({data:blocks});
 }
