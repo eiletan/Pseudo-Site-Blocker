@@ -1,7 +1,5 @@
 var gold = [];
 
-// TODO: Fix the issue where when the background script is activated, there is no locallist data available. Maybe fix by sending messages every time a new tab is fired
-// TODO: confirmed that it is the case that the background script is running properly; script doesn't have block list thought so to fix, request data everytime a new tab is created
 
 
 // Messages to popup when user visits a blocked website
@@ -83,58 +81,35 @@ var int;
 
 
 // Fired when user inputs new site to be blocked, updates the list
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         locallist = request.data;
+        // console.log(locallist);
     });
 
 
-// Fired when new tab is opened, getting the block list each time
-chrome.tabs.onCreated.addListener(function(tab){
-    console.log("background script awake");
-    chrome.storage.local.get(["sites"],function(result){
-        locallist = result.sites;
-        if(!(Array.isArray(locallist))){
-            locallist = [];
-        }
-    });
 
+//When tab url is changed, checks whether the changed tab is blocked, and spams popups if there is
+chrome.tabs.onUpdated.addListener((tabId,changeInfo,tab) => {
+    clearInterval(int);
+    if(tab.status === "complete" && tab.url !== "chrome://newtab/") {
+        unleashTheRoomba(tab.url);
+    }
 });
 
-//When tab url is changed, checks whether a blocked site is open in chrome, and spams popups if there is
-chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
+// Fired when user switches tabs. This tab that the user switches to will then be checked if it is blocked or not, and spams popups if it is
+chrome.tabs.onActivated.addListener((activeInfo) => {
     clearInterval(int);
-    chrome.storage.local.get(["sites"],function(result){
-        locallist = result.sites;
-        if(!(Array.isArray(locallist))){
-            locallist = [];
-        }
+    getActiveTabURL(activeInfo).then((taburl) => {
+        unleashTheRoomba(taburl);
+    }).catch((err) => {
+        console.log(err);
     });
-    verifyTab(tabId,changeInfo,tab);
-});
-
-//When a tab is closed, checks whether a blocked site still exists, and continues popup spam if there is
-chrome.tabs.onRemoved.addListener(function(tabId,removeInfo){
-    clearInterval(int);
-    chrome.tabs.query({currentWindow: true},function(tabs){
-        for(var a = 0; a < tabs.length; a++){
-            var utostr = String(tabs[a].url);
-            if(checkBlock(utostr)){
-                unleashTheRoomba(utostr);
-                break;
-            }
-        }
-    });
-   if(tabId == btab){
-       alert("You have exited blocked site, stopping alert spam");
-       clearInterval(int);
-   }
 });
 
 
 // Returns true if url matches any url in the block list
 function checkBlock(url){
-    for(var i = 0; i < locallist.length; i++){
+    for(let i = 0; i < locallist.length; i++){
         if(url.indexOf(locallist[i]) != -1){
             return true;
         }
@@ -152,11 +127,11 @@ function generateNum(){
 function verifyTab(tabId,changeInfo,tab){
     clearInterval(int);
     if(tab.status === "complete"){
-        console.log("reached complete: updated code");
-        console.log("length of local after activation: " +locallist.length);
+        // console.log("reached complete: updated code");
+        // console.log("length of local after activation: " +locallist.length);
             chrome.tabs.query({currentWindow: true},function(tabs){
-                for(var a = 0; a < tabs.length; a++){
-                    var utostr = String(tabs[a].url);
+                for(let a = 0; a < tabs.length; a++){
+                    let utostr = String(tabs[a].url);
                     if(checkBlock(utostr)){
                         unleashTheRoomba(utostr);
                         break;
@@ -171,8 +146,8 @@ function unleashTheRoomba(url){
     clearInterval(int);
     if(checkBlock(url)){
         alert("BEEP");
-        var interval = generateNum();
-        var index = 0;
+        let interval = generateNum();
+        let index = 0;
         int = setInterval(function(){
             if(index < gold.length){
                 alert(gold[index]);
@@ -184,6 +159,15 @@ function unleashTheRoomba(url){
     }
     else{
         clearInterval(int);
+    
     }
 }
 
+function getActiveTabURL(activeInfo) {
+    let atid = activeInfo.tabId;
+    return new Promise((resolve,reject) => {
+        chrome.tabs.get(atid,(tab) => {
+            resolve(tab.url);
+        });
+    });
+}
