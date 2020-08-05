@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Pseudo Site Blocker</title>
+    <link rel="stylesheet" type="text/css" href="blocker.css">
 </head>
+
 <body>
-    <h1>Pseudo Site Blocker</h1>
-    <p>Type in the website you want to pseudo block in the form below. Example: google.ca.</p>
+    <h1><i>Pseudo Site Blocker</i></h1>
+    <div>
+        <p>Type in the website you want to pseudo block in the form below. Example: google.ca.</p>
+    </div>
     <form class="site-form" id="site-form" action="#">
-        <input class="site-input" type="text"
-               id="site-input" placeholder="">
+        <input class="site-input" type="text" id="site-input" placeholder="">
         <button type="submit" class="site-button">Add</button>
     </form>
-    <button id = "button">See blocked sites</button>
-    <button id = "buttonc">Clear block list</button>
+    <button id="button">See blocked sites</button>
+    <button id="buttonc">Clear block list</button>
     <script src="main.js"></script>
 </body>
+
 </html>
