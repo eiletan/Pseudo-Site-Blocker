@@ -10,6 +10,15 @@ chrome.storage.local.get(["sites"],function(result){
         chrome.runtime.sendMessage({data:blocks});
 });
 
+
+// Fired when background.js makes a request for HTML element
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.getCurrentHTMLDom == "true") {
+        let entireHtmlElement = document.getElementsByTagName("html")[0];
+        sendResponse({entireHTMLElement: entireHtmlElement});
+    }
+});
+
 // Adds a new site to be blocked from user input, but only if it has not been added already
 function addSite(){
     let curr = document.getElementById("site-input").value;

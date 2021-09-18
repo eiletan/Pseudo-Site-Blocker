@@ -1,8 +1,8 @@
 {
   "name": "Pseudo Site blocker",
-  "version": "3.0",
-  "description": "Annoy yourself into being productive",
-  "permissions": ["storage","tabs","activeTab"],
+  "version": "4.0",
+  "description": "Boost your productivity by pseudo-blocking websites frequently visited during procrastination",
+  "permissions": ["storage","tabs","activeTab", "http://*/", "https://*/"],
   "background": {
     "scripts": ["background.js"],
     "persistent": true
