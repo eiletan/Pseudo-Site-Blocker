@@ -64,7 +64,7 @@ document.getElementById("blockedSitesBackButton").addEventListener("click", func
 // Fired when button to clear list is pressed, clears list
 document.getElementById("buttonc").addEventListener("click", function () {
     clearList();
-    if (document.getElementsByClassName("blockedSites")[0].style.display == "block") {
+    if (document.getElementsByClassName("blockedSites")[0].style.display != "none") {
         writeBlockedSitesToHTML();
     }
 });
