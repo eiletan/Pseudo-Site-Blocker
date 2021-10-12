@@ -1,4 +1,7 @@
 var blocks = [];
+var modal = document.getElementById("addDeleteModal");
+var modalText = document.getElementsByClassName("modal-text")[0];
+
 
 
 // Retrieve block list from memory on startup
@@ -13,7 +16,6 @@ window.onload = function () {
             writeBlockedSitesToHTML();
         }
     });
-    
 }
 
 
@@ -31,18 +33,23 @@ function addSite() {
     // alert("length before adding is: " +blocks.length);
     if (checkDups() != true) {
         blocks.push(curr);
-        alert(curr + " added!");
         chrome.storage.local.set({ "sites": blocks }, function () {
         });
         chrome.runtime.sendMessage({ data: blocks });
+        return true;
     }
+    return false;
 }
 
 // Fired when button is pressed to add a website
 document.getElementById("site-form").addEventListener('submit', function () {
-    addSite();
-    if (document.getElementsByClassName("blockedSites")[0].style.display != "none") {
-        writeBlockedSitesToHTML();
+    if(addSite()) {
+        let addStr = "Site added to block list!";
+        modalText.innerHTML = addStr;
+        modal.style.display = "block";
+        if (document.getElementsByClassName("blockedSites")[0].style.display != "none") {
+            writeBlockedSitesToHTML();
+        }
     }
 });
 
@@ -64,6 +71,9 @@ document.getElementById("blockedSitesBackButton").addEventListener("click", func
 // Fired when button to clear list is pressed, clears list
 document.getElementById("buttonc").addEventListener("click", function () {
     clearList();
+    let clearStr = "Blocked sites cleared!";
+    modalText.innerHTML = clearStr;
+    modal.style.display = "block";
     if (document.getElementsByClassName("blockedSites")[0].style.display != "none") {
         writeBlockedSitesToHTML();
     }
@@ -91,7 +101,9 @@ function checkDups() {
     let curr = document.getElementById("site-input").value;
     for (let i = 0; i < blocks.length; i++) {
         if (blocks[i].indexOf(curr) != -1) {
-            alert("Website already in your block list");
+            modalText.innerHTML = "Website is already in block list";
+            modal.style.display = "block";
+            modal.style.borderleftcolor = "crimson";
             return true;
         }
     }
@@ -102,7 +114,21 @@ function checkDups() {
 function clearList() {
     blocks = [];
     chrome.storage.local.set({ "sites": blocks }, function () {
-        alert("cleared");
+        // console.log("List cleared");
     });
     chrome.runtime.sendMessage({ data: blocks });
+}
+
+// Close modal when it is clicked
+modal.onclick = function () {
+    modal.style.display = "none";
+    modal.style.borderleftcolor = "limegreen";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        modal.style.borderleftcolor = "limegreen";
+    }
 }

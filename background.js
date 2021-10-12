@@ -4,7 +4,6 @@ var tabid;
 // List of blocked sites, received from the user interface/main.js
 var locallist = [];
 
-
 // Array containing tab id of currently blocked tabs
 var blockedTabId = [];
 
