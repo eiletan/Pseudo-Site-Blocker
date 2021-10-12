@@ -96,17 +96,17 @@ function getActiveTabURL(activeInfo) {
     });
 }
 
-// "Blocks" tab by changing opacity and disabling click events
+// "Blocks" tab by changing opacity and disabling click events and scrolling
 function blockTab(tabId) {
     chrome.tabs.executeScript(tabId,{
-        code: "document.getElementsByTagName('html')[0].style.opacity=0.3; document.getElementsByTagName('html')[0].style.pointerEvents='none';"
+        code: "document.getElementsByTagName('html')[0].style.opacity=0.3; document.getElementsByTagName('html')[0].style.pointerEvents='none'; document.getElementsByTagName('html')[0].style.overflow = 'hidden';"
       });
 }
 
 
-// "Unblocks" tab by restoring opacity and reenabling click events
+// "Unblocks" tab by restoring opacity and reenabling click events and scrolling
 function unblockTab(tabId) {
     chrome.tabs.executeScript(tabId,{
-        code: "document.getElementsByTagName('html')[0].style.opacity=1; document.getElementsByTagName('html')[0].style.pointerEvents='auto';"
+        code: "document.getElementsByTagName('html')[0].style.opacity=1; document.getElementsByTagName('html')[0].style.pointerEvents='auto'; document.getElementsByTagName('html')[0].style.overflow = 'initial';"
       });
 }
