@@ -1,6 +1,7 @@
 var blocks = [];
 var modal = document.getElementById("addDeleteModal");
 var modalText = document.getElementsByClassName("modal-text")[0];
+var modalContent = document.getElementsByClassName("modal-content")[0];
 
 
 
@@ -102,7 +103,7 @@ function checkDups() {
     for (let i = 0; i < blocks.length; i++) {
         if (blocks[i].indexOf(curr) != -1) {
             modalText.innerHTML = "Website is already in block list";
-            modal.style.borderleftcolor = "Crimson";
+            modalContent.style.borderLeftColor = "OrangeRed";
             modal.style.display = "block";
             return true;
         }
@@ -122,13 +123,13 @@ function clearList() {
 // Close modal when it is clicked
 modal.onclick = function () {
     modal.style.display = "none";
-    modal.style.borderleftcolor = "limegreen";
+    modalContent.style.borderLeftColor = "limegreen";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
-        modal.style.borderleftcolor = "limegreen";
+        modalContent.style.borderLeftColor = "limegreen";
     }
 }
