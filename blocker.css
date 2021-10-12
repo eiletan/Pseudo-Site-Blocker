@@ -4,7 +4,7 @@ body {
     background-repeat: repeat-x;
 }
 
-.site-button, #button, #buttonc {
+.popup-button {
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     border-radius: 12px;
     border: 2px solid gray;
@@ -20,8 +20,12 @@ p {
     padding-bottom: 10px;
 }
 
+.popup-input {
+    border: 2px solid gray;
+    border-radius: 6px;
+}
 
-.site-button:hover, #button:hover, #buttonc:hover {
+.popup-button:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
   }
 

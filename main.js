@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // Adds a new site to be blocked from user input, but only if it has not been added already
 function addSite() {
-    let curr = document.getElementById("site-input").value;
+    let curr = document.getElementById("popup-input").value;
     // alert("length before adding is: " +blocks.length);
     if (checkDups() != true) {
         blocks.push(curr);
@@ -42,7 +42,7 @@ function addSite() {
 }
 
 // Fired when button is pressed to add a website
-document.getElementById("site-form").addEventListener('submit', function () {
+document.getElementById("buttonAdd").addEventListener('click', function () {
     if(addSite()) {
         let addStr = "Site added to block list!";
         modalText.innerHTML = addStr;
@@ -98,12 +98,12 @@ function writeBlockedSitesToHTML() {
 
 // Function that checks the array of block sites for duplicates, returns true if there is a duplicate
 function checkDups() {
-    let curr = document.getElementById("site-input").value;
+    let curr = document.getElementById("popup-input").value;
     for (let i = 0; i < blocks.length; i++) {
         if (blocks[i].indexOf(curr) != -1) {
             modalText.innerHTML = "Website is already in block list";
+            modal.style.borderleftcolor = "Crimson";
             modal.style.display = "block";
-            modal.style.borderleftcolor = "crimson";
             return true;
         }
     }
