@@ -2,7 +2,8 @@ var blocks = [];
 var modal = document.getElementById("addDeleteModal");
 var modalText = document.getElementsByClassName("modal-text")[0];
 var modalContent = document.getElementsByClassName("modal-content")[0];
-
+var modalSuccessColor = "LimeGreen";
+var modalFailColor = "OrangeRed";
 
 
 // Retrieve block list from memory on startup
@@ -31,7 +32,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Adds a new site to be blocked from user input, but only if it has not been added already
 function addSite() {
     let curr = document.getElementById("popup-input").value;
-    // alert("length before adding is: " +blocks.length);
+    if (curr == "") {
+        let errStr = "Please enter a website to block";
+        openModal(errStr, modalFailColor);
+        return false;
+    }
     if (checkDups() != true) {
         blocks.push(curr);
         chrome.storage.local.set({ "sites": blocks }, function () {
@@ -46,8 +51,7 @@ function addSite() {
 document.getElementById("buttonAdd").addEventListener('click', function () {
     if(addSite()) {
         let addStr = "Site added to block list!";
-        modalText.innerHTML = addStr;
-        modal.style.display = "block";
+        openModal(addStr,modalSuccessColor);
         if (document.getElementsByClassName("blockedSites")[0].style.display != "none") {
             writeBlockedSitesToHTML();
         }
@@ -73,8 +77,7 @@ document.getElementById("blockedSitesBackButton").addEventListener("click", func
 document.getElementById("buttonc").addEventListener("click", function () {
     clearList();
     let clearStr = "Blocked sites cleared!";
-    modalText.innerHTML = clearStr;
-    modal.style.display = "block";
+    openModal(clearStr,modalSuccessColor);
     if (document.getElementsByClassName("blockedSites")[0].style.display != "none") {
         writeBlockedSitesToHTML();
     }
@@ -102,9 +105,8 @@ function checkDups() {
     let curr = document.getElementById("popup-input").value;
     for (let i = 0; i < blocks.length; i++) {
         if (blocks[i].indexOf(curr) != -1) {
-            modalText.innerHTML = "Website is already in block list";
-            modalContent.style.borderLeftColor = "OrangeRed";
-            modal.style.display = "block";
+            let errStr = "Website is already in block list";
+            openModal(errStr, modalFailColor);
             return true;
         }
     }
@@ -120,16 +122,22 @@ function clearList() {
     chrome.runtime.sendMessage({ data: blocks });
 }
 
+function openModal(modalMessage, modalColor) {
+    modalText.innerHTML = modalMessage;
+    if (modalContent.style.borderLeftColor != modalColor) {
+        modalContent.style.borderLeftColor = modalColor;
+    }
+    modal.style.display = "block";
+}
+
 // Close modal when it is clicked
 modal.onclick = function () {
     modal.style.display = "none";
-    modalContent.style.borderLeftColor = "limegreen";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
-        modalContent.style.borderLeftColor = "limegreen";
     }
 }
