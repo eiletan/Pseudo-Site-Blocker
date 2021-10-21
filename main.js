@@ -4,9 +4,9 @@ var modalText = document.getElementsByClassName("modal-text")[0];
 var modalContent = document.getElementsByClassName("modal-content")[0];
 var modalSuccessColor = "LimeGreen";
 var modalFailColor = "OrangeRed";
+var blockActiveStatus = 1;
 
-
-// Retrieve block list from memory on startup
+// Retrieve block list and block status from memory on startup
 window.onload = function () {
     chrome.storage.local.get(["sites"], function (result) {
         blocks = result.sites;
@@ -18,16 +18,16 @@ window.onload = function () {
             writeBlockedSitesToHTML();
         }
     });
+    chrome.storage.local.get(["blockActiveStatus"], function (result) {
+        resBlockActiveStatus = result.blockActiveStatus;
+        if (resBlockActiveStatus != undefined) {
+            blockActiveStatus = resBlockActiveStatus;
+            writeBlockStatusToHTML();
+        }
+    });
 }
 
 
-// Fired when background.js makes a request for HTML element
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.getCurrentHTMLDom == "true") {
-        let entireHtmlElement = document.getElementsByTagName("html")[0];
-        sendResponse({ entireHTMLElement: entireHtmlElement });
-    }
-});
 
 // Adds a new site to be blocked from user input, but only if it has not been added already
 function addSite() {
@@ -83,6 +83,28 @@ document.getElementById("buttonc").addEventListener("click", function () {
     }
 });
 
+// Fired when button to toggle blocking is pressed, toggles blocking on and off
+document.getElementById("buttontoggle").addEventListener("click", function () {
+    if (blockActiveStatus == 1) {
+        let bool = 0;
+        chrome.runtime.sendMessage({ blockActiveStatus: bool });
+        chrome.storage.local.set({ "blockActiveStatus": bool }, function () {
+            blockActiveStatus = bool;
+            writeBlockStatusToHTML();
+        });
+        openModal("Blocking paused!", modalSuccessColor);
+        
+    } else if (blockActiveStatus == 0) {
+        let bool = 1;
+        chrome.runtime.sendMessage({ blockActiveStatus: bool });
+        chrome.storage.local.set({ "blockActiveStatus": bool }, function () {
+            blockActiveStatus = bool;
+            writeBlockStatusToHTML(); 
+        });
+        openModal("Blocking enabled!", modalSuccessColor);
+    }
+});
+
 
 function writeBlockedSitesToHTML() {
     let str = "";
@@ -97,6 +119,17 @@ function writeBlockedSitesToHTML() {
     }
     let spanEl = document.getElementById("blockedSitesSpan");
     spanEl.innerHTML = str;
+}
+
+function writeBlockStatusToHTML() {
+    let spanBlockStatus = document.getElementById("blockStatusSpan");
+    if (blockActiveStatus == 0) {
+        spanBlockStatus.style.color = "orangeRed";
+        spanBlockStatus.innerHTML = "INACTIVE";
+    } else if (blockActiveStatus == 1) {
+        spanBlockStatus.style.color = "SeaGreen";
+        spanBlockStatus.innerHTML = "ACTIVE";
+    }
 }
 
 

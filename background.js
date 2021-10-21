@@ -7,21 +7,25 @@ var locallist = [];
 // Array containing tab id of currently blocked tabs
 var blockedTabId = [];
 
-var btab;
-
-// Interval for spamming popup messages
-var int;
+// Boolean indicating whether blocking is active or not
+var blockActiveStatus = 1;
 
 
-
-// Fired when user inputs new site to be blocked, updates the list
+// Fired when user inputs new site to be blocked, updates the list or when user toggles blocking
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    locallist = request.data;
-    if (request.data.length == 0) {
-        for (let i = 0; i < blockedTabId.length; i++) {
-            unblockTab(blockedTabId[i]);
+    if (request.data != undefined) {
+        locallist = request.data;
+        if (request.data.length == 0) {
+            unblockSession();
+            blockTabId = [];
         }
-        blockTabId = [];
+
+    }
+    if (request.blockActiveStatus != undefined) {
+        blockActiveStatus = request.blockActiveStatus;
+        if (blockActiveStatus == 0) {
+            unblockSession();
+        }
     }
 });
 
@@ -43,7 +47,7 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
             let ind = blockedTabId.indexOf(tabId);
             if (ind > -1) {
                 blockedTabId.splice(ind, 1);
-              }
+            }
         }
     }
 });
@@ -79,12 +83,12 @@ function generateNum() {
 
 
 function unleashTheRoomba(url, tabId) {
-    if (checkBlock(url)) {
-        console.log("UNLEASH");
-        blockedTabId.push(tabId);
-        blockTab(tabId);
+    if (blockActiveStatus == 1) {
+        if (checkBlock(url)) {
+            blockedTabId.push(tabId);
+            blockTab(tabId);
+        }
     }
-
 }
 
 function getActiveTabURL(activeInfo) {
@@ -98,15 +102,21 @@ function getActiveTabURL(activeInfo) {
 
 // "Blocks" tab by changing opacity and disabling click events and scrolling
 function blockTab(tabId) {
-    chrome.tabs.executeScript(tabId,{
+    chrome.tabs.executeScript(tabId, {
         code: "document.getElementsByTagName('html')[0].style.opacity=0.3; document.getElementsByTagName('html')[0].style.pointerEvents='none'; document.getElementsByTagName('html')[0].style.overflow = 'hidden';"
-      });
+    });
 }
 
 
 // "Unblocks" tab by restoring opacity and reenabling click events and scrolling
 function unblockTab(tabId) {
-    chrome.tabs.executeScript(tabId,{
+    chrome.tabs.executeScript(tabId, {
         code: "document.getElementsByTagName('html')[0].style.opacity=1; document.getElementsByTagName('html')[0].style.pointerEvents='auto'; document.getElementsByTagName('html')[0].style.overflow = 'initial';"
-      });
+    });
+}
+
+function unblockSession() {
+    for (let i = 0; i < blockedTabId.length; i++) {
+        unblockTab(blockedTabId[i]);
+    }
 }
