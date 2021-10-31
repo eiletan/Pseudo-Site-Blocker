@@ -23,6 +23,8 @@ window.onload = function () {
         if (resBlockActiveStatus != undefined) {
             blockActiveStatus = resBlockActiveStatus;
             writeBlockStatusToHTML();
+        } else {
+            writeBlockStatusToHTML();
         }
     });
 }
