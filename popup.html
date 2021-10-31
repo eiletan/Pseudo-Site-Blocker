@@ -11,12 +11,33 @@
     <div>
         <p>Type in the website you want to pseudo block in the form below. Example: google.ca.</p>
     </div>
-    <form class="site-form" id="site-form" action="#">
-        <input class="site-input" type="text" id="site-input" placeholder="">
-        <button type="submit" class="site-button">Add</button>
-    </form>
-    <button id="button">See blocked sites</button>
-    <button id="buttonc">Clear block list</button>
+    <input class="popup-input" type="text" id="popup-input" placeholder="">
+    <button id="buttonAdd" class="popup-button">Add</button><br>
+    <button id="buttontoggle" class="popup-button">Toggle blocking</button>
+    <button id="button" class="popup-button">See blocked sites</button><br>
+    <button id="buttonc" class="popup-button">Clear block list</button>
+    <div class="blockStatus">
+        <p>
+            Blocking status: <span id="blockStatusSpan">
+                
+            </span>
+        </p>
+    </div>
+    <div class="blockedSites">
+        <p>
+            Your blocked sites are:<br>
+            <span id="blockedSitesSpan">
+
+            </span>
+            <button class="popup-button" id="blockedSitesBackButton">Close blocked sites list</button>
+        </p>
+        
+    </div>
+    <div id="addDeleteModal" class="modal">
+        <div class="modal-content">
+          <span class="modal-text"><span>
+        </div>
+      </div>
     <script src="main.js"></script>
 </body>
 
