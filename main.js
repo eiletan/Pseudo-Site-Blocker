@@ -49,6 +49,26 @@ function addSite() {
     return false;
 }
 
+
+// Removes a site from blocked sites list, but only if it already exists in the list
+function removeSite() {
+    let curr = document.getElementById("popup-input").value;
+    if (curr == "") {
+        let errStr = "Please enter a website to remove";
+        openModal(errStr, modalFailColor);
+        return false;
+    }
+    if (checkDups()) {
+        let index = blocks.indexOf(curr);
+        blocks.splice(index,1);
+        chrome.storage.local.set({ "sites": blocks }, function () {
+        });
+        chrome.runtime.sendMessage({ data: blocks });
+        return true;
+    }
+    return false;
+}
+
 // Fired when button is pressed to add a website
 document.getElementById("buttonAdd").addEventListener('click', function () {
     if(addSite()) {
@@ -59,6 +79,19 @@ document.getElementById("buttonAdd").addEventListener('click', function () {
         }
     }
 });
+
+// Fired when button is pressed to remove a website
+document.getElementById("buttonRemove").addEventListener('click', function () {
+    if(removeSite()) {
+        let addStr = "Site removed from block list!";
+        openModal(addStr,modalSuccessColor);
+        if (document.getElementsByClassName("blockedSites")[0].style.display != "none") {
+            writeBlockedSitesToHTML();
+        }
+    }
+});
+
+
 
 // Fired when button is clicked to view blocked sites
 document.getElementById("button").addEventListener("click", function () {
