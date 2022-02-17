@@ -4,7 +4,7 @@ var tabid;
 // List of blocked sites, received from the user interface/main.js
 var locallist = [];
 
-// Array containing tab id of currently blocked tabs
+// JSON Object containing currently blocked tabs. Tab ids are keys and websites are values.
 var blockedTabId = [];
 
 // Boolean indicating whether blocking is active or not
@@ -15,9 +15,15 @@ var blockActiveStatus = 1;
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.data != undefined) {
         locallist = request.data;
+        if (request.removedSite != undefined) {
+            let removedTabIds = findSiteInBlocked(request.removedSite);
+            for (let i = 0; i < removedTabIds.length; i++) {
+                unblockTab(removedTabIds[i]);
+            }
+        }
         if (request.data.length == 0) {
             unblockSession();
-            blockTabId = [];
+            blockedTabId = {};
         }
 
     }
@@ -40,14 +46,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 
-
+// Remove tab id of a closed tab from blockedTabId
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    if (blockedTabId.length != 0) {
-        if (blockedTabId.includes(tabId)) {
-            let ind = blockedTabId.indexOf(tabId);
-            if (ind > -1) {
-                blockedTabId.splice(ind, 1);
-            }
+    let blockIds = Object.keys(blockedTabId);
+    if (blockIds.length != 0) {
+        if (blockIds.includes(tabId)) {
+            delete blockedTabId[tabId];
         }
     }
 });
@@ -85,8 +89,8 @@ function generateNum() {
 function unleashTheRoomba(url, tabId) {
     if (blockActiveStatus == 1) {
         if (checkBlock(url)) {
-            blockedTabId.push(tabId);
-            blockTab(tabId);
+            blockedTabId[tabId] = url;
+            blockTab(tabId); 
         }
     }
 }
@@ -116,7 +120,23 @@ function unblockTab(tabId) {
 }
 
 function unblockSession() {
-    for (let i = 0; i < blockedTabId.length; i++) {
-        unblockTab(blockedTabId[i]);
+    let blockKeys = Object.keys(blockedTabId)
+    for (let i = 0; i < blockKeys.length; i++) {
+        let tabId = parseInt(blockKeys[i]);
+        unblockTab(tabId);
     }
+}
+
+// Returns all tab ids which correspond to the url in BlockedTabIds
+function findSiteInBlocked(url) {
+    let blockKeys = Object.keys(blockedTabId);
+    let tabIds = [];
+    for (let i = 0; i < blockKeys.length; i++) {
+        let tabId = blockKeys[i];
+        let iurl = blockedTabId[tabId];
+        if (iurl.includes(url)) {
+            tabIds.push(parseInt(tabId));
+        }
+    }
+    return tabIds;
 }

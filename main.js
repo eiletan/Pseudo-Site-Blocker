@@ -63,7 +63,7 @@ function removeSite() {
         blocks.splice(index,1);
         chrome.storage.local.set({ "sites": blocks }, function () {
         });
-        chrome.runtime.sendMessage({ data: blocks });
+        chrome.runtime.sendMessage({ data: blocks, removedSite: curr});
         return true;
     }
     return false;
