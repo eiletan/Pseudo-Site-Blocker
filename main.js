@@ -22,6 +22,7 @@ window.onload = function () {
         resBlockActiveStatus = result.blockActiveStatus;
         if (resBlockActiveStatus != undefined) {
             blockActiveStatus = resBlockActiveStatus;
+            chrome.runtime.sendMessage({blockActiveStatus: blockActiveStatus});
             writeBlockStatusToHTML();
         } else {
             writeBlockStatusToHTML();
